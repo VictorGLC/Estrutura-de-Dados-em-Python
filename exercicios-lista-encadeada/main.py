@@ -5,6 +5,7 @@ from copy import deepcopy
 @dataclass
 class Item:
     chave: int
+    valor: str
 
 class No:
     def __init__(self, x: Item):
@@ -42,6 +43,16 @@ class Lista:
             return True
         return False
 
+    def remove_ini(self) -> bool:
+        if not self.vazia():
+            rem = self.primeiro
+            self.primeiro = self.primeiro.prox
+            if self.vazia():
+                self.ultimo = None
+            rem.prox = None
+            return True
+        return False
+
     def remove_chave(self, chave: int) -> bool:
         ptr = self.primeiro
         if not self.vazia():
@@ -57,17 +68,7 @@ class Lista:
                 rem.prox = None
                 return True
         return False
-
-    def remove_ini(self) -> bool:
-        if not self.vazia():
-            rem = self.primeiro
-            self.primeiro = self.primeiro.prox
-            if self.vazia():
-                self.ultimo = None
-            rem.prox = None
-            return True
-        return False
-
+   
     def insere_pos(self, x: Item, pos: int) -> bool:
         i = 0
         ptr = self.primeiro
@@ -85,3 +86,45 @@ class Lista:
                 ptr.prox = novo
                 return True
         return False
+
+    def exibir_lista(self):
+        ptr = self.primeiro
+        while ptr is not None:
+            print('Chave:', ptr.dado.chave, '/ Valor:', ptr.dado.valor, end=" -> ")
+            ptr = ptr.prox
+        print("None")
+
+    def contar_celulas(self) -> int:
+        count = 0
+        ptr = self.primeiro
+        while ptr is not None:
+            count += 1
+            ptr = ptr.prox
+        return count
+
+    def concatenar(self, outra_lista: Lista):
+        if not outra_lista.vazia():
+            if self.vazia():
+                self.primeiro = outra_lista.primeiro
+                self.ultimo = outra_lista.ultimo
+            else:
+                self.ultimo.prox = outra_lista.primeiro
+                self.ultimo = outra_lista.ultimo
+            outra_lista.primeiro = None
+            outra_lista.ultimo = None
+    
+l = Lista()
+l.insere_ini(Item(1, 'A'))
+l.insere_ini(Item(2, 'B'))
+
+l.exibir_lista()
+
+m = Lista()
+m.insere_ini(Item(4, 'C'))
+m.insere_ini(Item(3, 'D'))
+
+l.concatenar(m)
+l.exibir_lista()
+
+l.insere_pos(Item(5, 'E'), 4)
+l.exibir_lista()
